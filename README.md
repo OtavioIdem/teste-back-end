@@ -32,8 +32,9 @@ Camada	Stack
 ├── .env                    → Variáveis de ambiente
 └── README.md
 
+
 ⚙️ Configuração de Ambiente
-🧾 .env principal (renovar o arquivo .env.config)
+🧾 .env principal (renomear o arquivo .env.config)
 APP_NAME=Laravel
 APP_ENV=local
 APP_KEY=
