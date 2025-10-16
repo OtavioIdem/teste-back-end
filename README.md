@@ -22,10 +22,7 @@ cd teste-back-end
 
 🧱 2️⃣ — Criar arquivo .env
 
-O projeto já inclui um .env.example. Basta duplicar:
-
-cp .env.example .env
-
+O projeto já inclui um .env.
 
 Nenhuma edição é necessária — o .env já está configurado para funcionar no Docker com MySQL, Redis e Horizon.
 
