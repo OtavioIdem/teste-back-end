@@ -1,265 +1,232 @@
 <div align="center">
-🚀 Teste Prático — Laravel 10.10 + React (Vite + Tailwind)
+🚀 Gerenciador de Produtos — Laravel + React + Docker
 
-Gerenciamento de biblioteca com Docker, API Laravel, Frontend React,
-importação de produtos via API externa, e filas com Redis + Horizon.
+Aplicação completa de gerenciamento de produtos e categorias, com autenticação via Laravel Sanctum, CRUD completo, importação automática da FakeStore API, e interface moderna em React (Vite + Tailwind).
+Tudo pronto para rodar em qualquer ambiente Linux Ubuntu via Docker, sem ajustes manuais.
 
 </div>
-🧩 Tecnologias Principais
+🧩 Tecnologias Utilizadas
 Camada	Stack
-🖥️ Frontend	React 18 • Vite 4 • Tailwind CSS 3 • React Router DOM 6
-⚙️ Backend	Laravel 10.10 • Sanctum • Horizon • GuzzleHTTP
-🗄️ Banco	MySQL 8
+🖥️ Frontend	React 18 • Vite 4 • Tailwind CSS 3 • React Router
+⚙️ Backend	Laravel 10 • Sanctum • Horizon • GuzzleHTTP
+🗄️ Banco de Dados	MySQL 8
 🔁 Filas & Cache	Redis 7
-🐳 Infraestrutura	Docker Compose (Laravel Sail)
-🧱 Arquitetura
-📦 projeto/
-├── app/                    → Controllers, Services, Jobs, Commands
-├── resources/
-│   ├── views/app.blade.php → Shell do React SPA
-│   ├── css/app.css         → Estilos Tailwind
-│   └── js/                 → Frontend React + Vite
-│       ├── app.jsx
-│       ├── bootstrap.js
-│       └── pages/
-│           ├── Login.jsx
-│           ├── Products.jsx
-│           └── ProductForm.jsx
-├── routes/
-│   ├── api.php             → Rotas da API (protegidas por Sanctum)
-│   └── web.php             → Rotas do SPA (deep link)
-├── compose.yaml            → Docker Compose (Laravel + MySQL + Redis + Horizon)
-├── .env                    → Variáveis de ambiente
-└── README.md
+🐳 Infraestrutura	Docker Compose (Laravel Sail base)
+⚙️ Como rodar o projeto no Ubuntu
+
+Abaixo está o guia definitivo para clonar e subir o projeto em um ambiente Linux limpo, sem precisar editar arquivos manualmente.
+
+🧾 1️⃣ — Clonar o repositório
+git clone https://github.com/SEU_USUARIO/teste-back-end.git
+cd teste-back-end
+
+🧱 2️⃣ — Criar arquivo .env
+
+O projeto já inclui um .env.example. Basta duplicar:
+
+cp .env.example .env
 
 
-⚙️ Configuração de Ambiente
-🧾 .env principal (renomear o arquivo .env.config)
-APP_NAME=Laravel
-APP_ENV=local
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost:8080
-APP_PORT=8080
+Nenhuma edição é necessária — o .env já está configurado para funcionar no Docker com MySQL, Redis e Horizon.
 
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=laravel
-DB_USERNAME=sail
-DB_PASSWORD=password
+🐳 3️⃣ — Subir os containers
 
-QUEUE_CONNECTION=redis
-REDIS_HOST=redis
-REDIS_CLIENT=phpredis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+Todos os serviços (Laravel, MySQL, Redis e Horizon) serão configurados automaticamente.
 
-# FRONTEND (Vite)
-VITE_API_URL=http://localhost:8080/api
-VITE_PORT=5173
-
-# Sessões SPA (opcional)
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost:8080
-SESSION_DOMAIN=localhost
-
-# Configuração do Docker (Sail)
-WWWUSER=1000
-WWWGROUP=1000
-MYSQL_EXTRA_OPTIONS=
-
-🐳 Subindo o Projeto com Docker
-🏗️ 1️⃣ — Build & subir containers
 docker compose up -d --build
+
+
+Verifique se os serviços estão rodando:
+
 docker compose ps
 
-🧰 2️⃣ — Entrar no container laravel.test
+⚙️ 4️⃣ — Instalar e configurar o backend
+
+Entre no container do Laravel:
+
 docker compose exec laravel.test bash
 
-⚙️ 3️⃣ — Configurar o backend
+
+Execute os comandos de instalação:
+
 composer install
 php artisan key:generate
-php artisan migrate
-
-# Dependências principais
-composer require laravel/sanctum:^3.3 laravel/horizon:^5.20 guzzlehttp/guzzle:^7.9
-php artisan horizon:install
-
-
-🔐 Permissões (se necessário)
-
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+php artisan migrate --seed
 exit
 
 
-✅ Reinicie os serviços
+✅ Isso irá:
 
-docker compose up -d
+Instalar dependências PHP
 
-🎨 Frontend (React + Vite + Tailwind)
+Gerar a APP_KEY
 
-Na raiz do projeto:
+Criar e popular o banco de dados
+
+Preparar o Horizon e o Sanctum
+
+🎨 5️⃣ — Instalar e rodar o frontend (Vite + React + Tailwind)
+
+No host (Ubuntu):
 
 npm install
-npm install react-router-dom
 npm run dev
 
 
-🔗 Acesse o app em: http://localhost:8080
+O Vite cuidará automaticamente da compilação do React e do Tailwind.
 
-(não use a porta 5173 diretamente — o Laravel injeta os assets do Vite)
+🌐 6️⃣ — Acessar o sistema
 
-🌐 URLs Importantes
-Serviço	URL
-🖥️ Aplicação (SPA via Laravel)	http://localhost:8080
+Aplicação (frontend via Laravel):
+👉 http://localhost:8080
 
-⚙️ API	http://localhost:8080/api
+API (backend):
+👉 http://localhost:8080/api
 
-🧠 Horizon (filas)	http://localhost:8080/horizon
+Painel Horizon (filas):
+👉 http://localhost:8080/horizon
 
-⚡ Vite (dev server)	http://localhost:5173
- (somente em modo dev)
-🔐 Autenticação (Sanctum)
+🔑 Como usar o sistema
+👤 Login
 
-Login
+Usuário padrão (criado pelo seeder):
+
+Email: admin@example.com
+Senha: password
+
+
+Para autenticar via API:
 
 POST /api/auth/login
+Content-Type: application/json
+
 {
   "email": "admin@example.com",
   "password": "password"
 }
 
 
-Logout
-
-POST /api/auth/logout
-
-
-Editar Perfil
-
-PUT /api/auth/profile
-{ "name": "Novo Nome", "phone": "11999999999" }
-
-🛍️ CRUD de Produtos e Categorias
-Método	Endpoint	Descrição
-GET	/api/products	Lista de produtos (filtros: name, category, has_image)
-GET	/api/products/{id}	Detalhes de produto
-POST	/api/products	Criação
-PUT	/api/products/{id}	Atualização
-DELETE	/api/products/{id}	Exclusão
-GET	/api/categories	Lista categorias
-POST	/api/categories	Criar categoria
-
-Payload:
+Resposta:
 
 {
-  "name": "product name",
-  "price": 109.95,
-  "description": "Descrição do produto...",
-  "category": "test",
+  "token": "eyJ0eXAiOiJKV1QiLCJh...",
+  "user": {
+    "id": 1,
+    "name": "Admin",
+    "email": "admin@example.com"
+  }
+}
+
+
+O token JWT deve ser usado como Bearer Token nas requisições seguintes:
+
+Authorization: Bearer <seu_token>
+
+🛍️ Gerenciamento de Produtos
+📌 Listar produtos
+GET /api/products
+
+Filtros disponíveis:
+Filtro	Tipo	Descrição
+name	string	Busca por nome
+category	string	Busca por categoria
+has_image	1 / 0	Filtra produtos com ou sem imagem
+
+Exemplo:
+
+GET /api/products?name=shirt&category=fashion&has_image=1
+
+➕ Criar produto
+POST /api/products
+
+{
+  "name": "Tênis Nike Air",
+  "price": 499.90,
+  "description": "Tênis esportivo confortável",
+  "category": "Calçados",
   "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
 }
 
-🔄 Importação de Produtos (FakeStore API)
-📦 Via Artisan
-# Importar todos os produtos
+✏️ Atualizar produto
+PUT /api/products/{id}
+
+🗑️ Deletar produto
+DELETE /api/products/{id}
+
+🧩 Gerenciamento de Categorias
+Método	Endpoint	Descrição
+GET	/api/categories	Listar categorias
+POST	/api/categories	Criar categoria
+PUT	/api/categories/{id}	Atualizar categoria
+DELETE	/api/categories/{id}	Excluir categoria
+🔎 Buscar produto por ID
+GET /api/products/{id}
+
+
+Retorna:
+
+{
+  "id": 1,
+  "name": "Tênis Nike Air",
+  "price": 499.90,
+  "description": "Tênis esportivo confortável",
+  "categories": ["Calçados"],
+  "image_url": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
+}
+
+🔄 Importar produtos da FakeStore API
+⌨️ Via comando Artisan
+
+Dentro do container:
+
 docker compose exec laravel.test php artisan products:import
 
-# Importar produto específico (id externo)
+
+Isso importa todos os produtos da API https://fakestoreapi.com.
+
+📦 Importar um produto específico
 docker compose exec laravel.test php artisan products:import --id=1
 
-# Enfileirar importação (fila/Horizon)
-docker compose exec laravel.test php artisan products:import --id=1 --queued
+⚙️ Importar via endpoint REST
 
-⚙️ Via API REST
+Importar todos:
+
 POST /api/import/products
+
+
+Importar apenas um (por ID externo):
+
 POST /api/import/products/{externalId}?queued=1
 
-🧠 Horizon (Filas Redis)
+🧠 Painel de Filas — Laravel Horizon
 
-Processa jobs (importações, emails, etc.)
+O Horizon é usado para processar jobs da fila, como a importação assíncrona.
 
-Painel de monitoramento: /horizon
+Painel: http://localhost:8080/horizon
 
-Rodando em container dedicado: horizon
+⚠️ Em produção, o acesso é restrito — no ambiente local está liberado.
 
-Restringir acesso (produção):
-routes/horizon.php
-
-Horizon::auth(fn ($request) => app()->environment('local'));
-
-🧾 Comandos Úteis
-# status dos containers
-docker compose ps
-
-# logs
-docker compose logs -f laravel.test
-docker compose logs -f mysql
-docker compose logs -f redis
-docker compose logs -f horizon
-
-# shell no container
-docker compose exec laravel.test bash
-
-# caches Laravel
-docker compose exec laravel.test php artisan optimize:clear
-docker compose exec laravel.test php artisan config:cache
-docker compose exec laravel.test php artisan route:cache
-
-🧰 Troubleshooting (erros comuns)
+🧰 Comandos Úteis
+Ação	Comando
+Subir containers	docker compose up -d --build
+Entrar no container	docker compose exec laravel.test bash
+Rodar migrations	php artisan migrate
+Limpar cache	php artisan optimize:clear
+Ver logs do Laravel	docker compose logs -f laravel.test
+Ver logs do Horizon	docker compose logs -f horizon
+Reiniciar tudo	docker compose down && docker compose up -d
+🧾 Troubleshooting
 Problema	Causa	Solução
-🧩 Horizon não instala no Windows	Falta pcntl/posix	Instale dentro do container
-🔄 Redis “Starting”	Cache preso	docker compose restart redis
-🐬 MySQL não conecta	.env incorreto	DB_HOST=mysql, user sail, senha password
-🧱 Tela “Laravel + Vite”	Abriu porta errada	Use http://localhost:8080
-🚫 404 ao atualizar rota React	Laravel não mapeou view	Garanta Route::view('/{any}', 'app')
-⚠️ Permissões storage/cache	Permissões no host	chmod -R 775 storage bootstrap/cache
-✅ Checklist Final
-
- Containers sobem (laravel.test, mysql, redis, horizon)
-
- .env configurado (APP_URL, DB_*, VITE_API_URL)
-
- composer install + php artisan key:generate
-
- php artisan migrate
-
- npm install + npm run dev
-
- App acessível em http://localhost:8080
-
- CRUD e importador funcionando
-
- (Opcional) Filas/Horizon ativos
-
-☁️ Deploy (produção Ubuntu)
-docker compose up -d --build
-
-docker compose exec laravel.test bash -lc '
-composer install --no-dev --optimize-autoloader &&
-php artisan key:generate &&
-php artisan migrate --force &&
-php artisan config:cache &&
-php artisan route:cache &&
-php artisan view:cache
-'
-
-docker compose restart horizon
-
-
-Para compilar o front:
-
-npm run build
-
-
-O Laravel servirá os assets via @vite(manifest.json) automaticamente.
-
-<div align="center">
-
-🧡 Feito com Laravel, React e muito café ☕
-💬 Qualquer dúvida, verifique os logs:
-
-docker compose logs -f laravel.test
-
-</div>
+Redis não sobe	container lento	docker compose restart redis
+MySQL demora para responder	inicialização lenta	espere 10s e rode php artisan migrate novamente
+Horizon não instala no Windows	falta de pcntl/posix	instale via Docker/Linux
+Vite mostra tela padrão	abriu a porta errada	use http://localhost:8080
+Erro 404 ao recarregar página React	Laravel sem fallback	garanta Route::view('/{any}', 'app') no routes/web.php
+💻 Resumo rápido
+Passo	Comando
+1️⃣ Clonar	git clone ...
+2️⃣ Copiar .env	cp .env.example .env
+3️⃣ Subir containers	docker compose up -d --build
+4️⃣ Instalar backend	docker compose exec laravel.test bash → composer install && php artisan migrate --seed
+5️⃣ Instalar frontend	npm install && npm run dev
+6️⃣ Acessar app	http://localhost:8080
